@@ -1,0 +1,14 @@
+name: echo hogeとecho fugaの間に承認挟むだけ
+on:
+  push:
+    branches:
+      - main
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  echo-hoge:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hoge"
+
