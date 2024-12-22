@@ -11,4 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "hoge"
-
+  echo-fuga:
+    needs: echo-hoge
+    environment:
+      name: prod
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "fuga"
