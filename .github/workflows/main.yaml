@@ -1,13 +1,8 @@
-name: echo hogeとecho fugaの間に承認挟むだけ
+name: matrixの共通化test
 on:
   push:
     branches:
       - main
-permissions:
-  id-token: write
-  contents: read
-  deployments: write
-
 jobs:
   define-matrix:
     runs-on: ubuntu-latest
