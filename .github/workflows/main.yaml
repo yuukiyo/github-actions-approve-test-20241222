@@ -9,8 +9,11 @@ permissions:
 jobs:
   echo-hoge:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [10, 12, 14]
     steps:
-      - run: echo "hoge"
+      - run: echo ${{matrix.version}}
   echo-fuga:
     needs: echo-hoge
     environment:
