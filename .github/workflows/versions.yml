@@ -6,9 +6,7 @@ jobs:
   provide-versions:
     runs-on: ubuntu-latest
     outputs:
-      matrix-versions: ${{ steps.set-versions.outputs.versions }}
+      matrix-versions: ${{ steps.set-versions.outputs.matrix }}
     steps:
       - id: set-versions
-        shell: bash
-        run: |
-          echo "versions=$(jq -n --arg v "[10,12,14]" "$v")" >> $GITHUB_OUTPUT 
+        run: echo "matrix=[10,12,14]" >> "$GITHUB_OUTPUT" 
