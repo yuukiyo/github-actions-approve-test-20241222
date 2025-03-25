@@ -6,18 +6,27 @@ on:
 permissions:
   id-token: write
   contents: read
+
 jobs:
+  get-versions:
+    uses: ./.github/workflows/versions.yml
+
   echo-hoge:
+    needs: get-versions
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [10, 12, 14]
+        version: ${{ fromJson(needs.get-versions.outputs.matrix-versions) }}
     steps:
       - run: echo ${{matrix.version}}
+
   echo-fuga:
-    needs: echo-hoge
+    needs: [get-versions, echo-hoge]
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.get-versions.outputs.matrix-versions) }}
     environment:
       name: prod
     runs-on: ubuntu-latest
     steps:
-      - run: echo "fuga"
+      - run: echo ${{matrix.version}}

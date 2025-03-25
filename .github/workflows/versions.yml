@@ -1,0 +1,12 @@
+name: Common Versions
+on:
+  workflow_call: {}
+
+jobs:
+  provide-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-versions: ${{ steps.set-versions.outputs.versions }}
+    steps:
+      - id: set-versions
+        run: echo "versions=[10,12,14]" >> $GITHUB_OUTPUT 
