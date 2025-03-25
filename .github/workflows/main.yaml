@@ -9,24 +9,35 @@ permissions:
   deployments: write
 
 jobs:
-  generate-matrix:
+  define-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - id: set-matrix
-        run: echo "matrix=$(cat matrix.json | jq -c)" >> $GITHUB_OUTPUT
-        working-directory: .github/workflows/
+        run: |
+          echo "matrix=$(cat << 'EOF' | jq -c
+          {
+            "go": ["1.23"],
+            "ruby": ["3.3", "3.4"]
+          }
+          EOF
+          )" >> $GITHUB_OUTPUT
   echo-hoge:
-    name: test (Go ${{ matrix.go }}, Ruby ${{ matrix.ruby }})
-    needs:
-      - generate-matrix
+    needs: define-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.define-matrix.outputs.matrix) }}
+    steps:
+      - name: Echo version
+        run: echo ${{matrix.version}}
+  echo-fuga:
+    needs: define-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.define-matrix.outputs.matrix) }}
     steps:
       - name: Echo version
         run: echo ${{matrix.version}}
