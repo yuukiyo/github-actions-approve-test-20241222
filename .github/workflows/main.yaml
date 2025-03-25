@@ -26,7 +26,7 @@ jobs:
       matrix: ${{ fromJSON(needs.define-matrix.outputs.matrix) }}
     steps:
       - name: Echo version
-        run: echo ${{matrix.version}}
+        run: echo "hoge (Go ${{ matrix.go }}, Ruby ${{ matrix.ruby }})"
   echo-fuga:
     needs: define-matrix
     runs-on: ubuntu-latest
@@ -35,4 +35,4 @@ jobs:
       matrix: ${{ fromJSON(needs.define-matrix.outputs.matrix) }}
     steps:
       - name: Echo version
-        run: echo ${{matrix.version}}
+        run: echo "fuga (Go ${{ matrix.go }}, Ruby ${{ matrix.ruby }})"
