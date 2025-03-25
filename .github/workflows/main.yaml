@@ -6,6 +6,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  deployments: write
 
 jobs:
   get-versions:
@@ -22,11 +23,11 @@ jobs:
 
   echo-fuga:
     needs: [get-versions, echo-hoge]
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
     strategy:
       matrix:
         version: ${{ fromJson(needs.get-versions.outputs.matrix-versions) }}
-    environment:
-      name: prod
-    runs-on: ubuntu-latest
     steps:
       - run: echo ${{matrix.version}}
