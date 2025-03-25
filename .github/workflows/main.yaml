@@ -9,25 +9,22 @@ permissions:
   deployments: write
 
 jobs:
-  get-versions:
-    uses: ./.github/workflows/versions.yml
-
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo "matrix=$(cat matrix.json | jq -c)" >> $GITHUB_OUTPUT
+        working-directory: .github/workflows/
   echo-hoge:
-    needs: get-versions
+    name: test (Go ${{ matrix.go }}, Ruby ${{ matrix.ruby }})
+    needs:
+      - generate-matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        version: ${{ fromJson(needs.get-versions.outputs.matrix-versions) }}
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - run: echo ${{matrix.version}}
-
-  echo-fuga:
-    needs: [get-versions, echo-hoge]
-    runs-on: ubuntu-latest
-    environment:
-      name: prod
-    strategy:
-      matrix:
-        version: ${{ fromJson(needs.get-versions.outputs.matrix-versions) }}
-    steps:
-      - run: echo ${{matrix.version}}
+      - name: Echo version
+        run: echo ${{matrix.version}}
